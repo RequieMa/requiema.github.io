@@ -74,6 +74,8 @@ bash scripts/install-hook.sh
 
 Reddit and Hacker News are intentionally excluded — always hand-craft those.
 
+## Structure
+
 ```
 docs/
 ├── blog/posts/en/     ← English posts
