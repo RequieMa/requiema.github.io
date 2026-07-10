@@ -163,3 +163,79 @@ def test_match_platforms_tag_in_middle_group():
     assert ("juejin", "zh") in names
     assert ("devto", "en") in names
     assert len(platforms) == 2
+
+
+from syndicate import find_post_for_language
+
+
+def test_find_post_for_language_same_language():
+    """If post is already in the target language, return it unchanged."""
+    post_file = make_post_file("""\
+    ---
+    tags: [essay]
+    ---
+
+    # English Post
+
+    Content.
+    """, dir_name="en")
+    post = parse_post(post_file)
+
+    result = find_post_for_language(post, "en")
+    assert result is not None
+    assert result.language == "en"
+    assert result.slug == post.slug
+
+
+def test_find_post_for_language_sibling_exists():
+    """If a sibling in the target language exists, return it."""
+    tmpdir = Path(tempfile.mkdtemp())
+    en_dir = tmpdir / "en"
+    zh_dir = tmpdir / "zh"
+    en_dir.mkdir()
+    zh_dir.mkdir()
+
+    en_path = en_dir / "my-post.md"
+    zh_path = zh_dir / "my-post.md"
+
+    en_path.write_text(textwrap.dedent("""\
+    ---
+    tags: [essay]
+    ---
+
+    # English Post
+    Content.
+    """), encoding="utf-8")
+
+    zh_path.write_text(textwrap.dedent("""\
+    ---
+    tags: [essay]
+    ---
+
+    # 中文文章
+    内容。
+    """), encoding="utf-8")
+
+    en_post = parse_post(en_path)
+    result = find_post_for_language(en_post, "zh")
+
+    assert result is not None
+    assert result.language == "zh"
+    assert "中文文章" in result.title
+
+
+def test_find_post_for_language_no_sibling():
+    """If no sibling exists, return None."""
+    post_file = make_post_file("""\
+    ---
+    tags: [essay]
+    ---
+
+    # Only English
+
+    No Chinese version.
+    """, dir_name="en")
+    post = parse_post(post_file)
+
+    result = find_post_for_language(post, "zh")
+    assert result is None

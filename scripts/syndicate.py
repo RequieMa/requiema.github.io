@@ -130,3 +130,27 @@ def match_platforms(post: Post, routes: list[Route]) -> list[Platform]:
                     matched[key] = p
 
     return list(matched.values())
+
+
+def find_post_for_language(post: Post, target_lang: str) -> Post | None:
+    """Find the version of this post in the target language.
+
+    Given a post at en/my-post.md, check if zh/my-post.md exists (and vice versa).
+
+    Args:
+        post: A parsed post.
+        target_lang: 'en' or 'zh' — the desired language.
+
+    Returns:
+        A parsed Post in the target language, or None if no such version exists.
+    """
+    if post.language == target_lang:
+        return post
+
+    other_lang_dir = post.path.parent.parent / target_lang
+    other_path = other_lang_dir / post.path.name
+
+    if other_path.exists():
+        return parse_post(other_path)
+
+    return None
