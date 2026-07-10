@@ -1,0 +1,13 @@
+[project]
+name = "requiema-github-io"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "mkdocs-material>=9.7.6",
+    "pillow>=11.0.0",
+    "cairosvg>=2.7.0",
+    "mkdocs-git-revision-date-localized-plugin>=1.2.0",
+    "mkdocs-rss-plugin>=1.8.0",
+]
