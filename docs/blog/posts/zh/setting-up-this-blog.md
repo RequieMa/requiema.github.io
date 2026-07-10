@@ -42,11 +42,20 @@ MkDocs Material 赢在第三列 —— 一个主题把事做全、做一致，�
 ### 1. 脚手架
 
 ```bash
-pip install mkdocs-material
-mkdocs new .
+uv init
+uv add mkdocs-material pillow cairosvg \
+  mkdocs-git-revision-date-localized-plugin \
+  mkdocs-rss-plugin
 ```
 
-得到 `mkdocs.yml` 和 `docs/index.md`。把 `index.md` 换成自己的首页。
+`uv` 管理依赖，带 lockfile（`uv.lock`），构建可复现。之后只需要关注 `mkdocs.yml` 和
+`docs/index.md`。把 `index.md` 换成自己的首页。
+
+本地开发：
+
+```bash
+uv run mkdocs serve    # → http://127.0.0.1:8000
+```
 
 ### 2. 核心配置
 
@@ -148,7 +157,8 @@ Material 的 feature flag 文档很全 —— 需要什么开什么，其余的�
 date:
   created: 2026-07-10
 categories:
-  - CategoryName
+  - zh             # 语言分类：en 或 zh
+  - topic-name
 tags:
   - chinese    # 或 english
   - topic-tag

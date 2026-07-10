@@ -16,7 +16,9 @@ authors:
 # How This Blog Was Built
 
 The first post is about the blog itself — a write-up of every decision and step that went into
-putting this site together. If you are setting up a similar lightweight developer blog with
+putting this site together. 
+
+If you are setting up a similar lightweight developer blog with
 [MkDocs Material][1], this should save you a couple of hours.
 
 ## Why MkDocs Material?
@@ -44,11 +46,21 @@ first-class, not an afterthought.
 ### 1. Scaffold
 
 ```bash
-pip install mkdocs-material
-mkdocs new .
+uv init
+uv add mkdocs-material pillow cairosvg \
+  mkdocs-git-revision-date-localized-plugin \
+  mkdocs-rss-plugin
 ```
 
-This gives you `mkdocs.yml` and `docs/index.md`. Replace `index.md` with your landing page.
+`uv` manages dependencies with a lockfile (`uv.lock`) so builds are reproducible. After that,
+`mkdocs.yml` and `docs/index.md` are the only files you touch. Replace `index.md` with your
+landing page.
+
+Local dev server:
+
+```bash
+uv run mkdocs serve    # → http://127.0.0.1:8000
+```
 
 ### 2. Core Configuration
 
@@ -150,7 +162,8 @@ Every post is a Markdown file with frontmatter:
 date:
   created: 2026-07-10
 categories:
-  - CategoryName
+  - en             # language category: en or zh
+  - topic-name
 tags:
   - english     # or chinese
   - topic-tag
