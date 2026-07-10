@@ -1,0 +1,20 @@
+#!/bin/bash
+# Post-commit hook: detect new/modified blog posts and remind about syndication.
+# Installed by scripts/install-hook.sh
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD | grep '^docs/blog/posts/.*\.md$' || true)
+
+if [ -n "$CHANGED" ]; then
+    echo ""
+    echo "📢 检测到博客文章变更，检查同步目标..."
+    echo ""
+
+    echo "$CHANGED" | while read -r file; do
+        uv run --directory "$REPO_ROOT" python scripts/syndicate.py "$REPO_ROOT/$file"
+    done
+
+    echo ""
+    echo "💡 打开 MultiPost 浏览器扩展 → 粘贴对应文件内容 → 选择平台 → 一键发布"
+    echo ""
+fi
