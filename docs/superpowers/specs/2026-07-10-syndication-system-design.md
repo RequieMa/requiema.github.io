@@ -22,7 +22,66 @@ MultiPost browser extension. A Git hook provides automatic reminders on commit.
 
 ## Components
 
-### 1. `scripts/syndicate.py` — CLI script (~150-200 lines)
+### 1. Project Layout
+
+```
+scripts/
+├── syndicate.py          ← CLI script (~150 lines)
+└── syndicate.yml         ← routing config (committed, user-editable)
+```
+
+### 2. `scripts/syndicate.yml` — Routing Config
+
+```yaml
+# Blog Syndication Routing
+# Maps convention tags → target platforms with language preference.
+# Edit freely — the script reads from here, nothing is hardcoded.
+#
+# language: zh → expects Chinese version; en → English version
+# Reddit/HN are intentionally absent (always hand-crafted).
+
+routes:
+  - tags: [essay]
+    platforms:
+      - name: zhihu
+        language: zh
+      - name: gongzhonghao
+        language: zh
+      - name: devto
+        language: en
+      - name: substack
+        language: en
+
+  - tags: [tutorial, guide, howto]
+    platforms:
+      - name: juejin
+        language: zh
+      - name: devto
+        language: en
+
+  - tags: [release, launch]
+    platforms:
+      - name: devto
+        language: en
+      - name: x
+        language: en
+      - name: x
+        language: zh
+
+  - tags: [book, notes]
+    platforms:
+      - name: yuque
+        language: zh
+      - name: devto
+        language: en
+```
+
+**Resolution rules:**
+- First matching route group wins (top-to-bottom)
+- Post with no matching convention tag → no sync targets, script prints info message
+- Multiple matching tags across groups (e.g., `essay` + `tutorial`) → union of both platform sets, deduplicated by `name+language`
+
+### 3. `scripts/syndicate.py` — CLI Script
 
 **Dependencies:** Python stdlib + `pyyaml` (already in project)
 
@@ -33,26 +92,13 @@ python scripts/syndicate.py --all                              # all posts
 ```
 
 **Logic flow:**
-1. Parse post path → read YAML frontmatter → extract title, tags, categories, content
-2. Look up convention tags in hardcoded routing table
+1. Parse post path → read YAML frontmatter → extract title, tags, content
+2. Load `scripts/syndicate.yml` → match post tags against route groups
 3. For each matched platform, find the right language version (zh → Chinese post, en → English post)
 4. Call platform-specific formatter → write to `_syndication/{slug}/{platform}-{lang}.md`
 5. Print summary to terminal
 
-### 2. Routing Table (hardcoded in script)
-
-| Convention tag(s) | Content type | Platforms |
-|---|---|---|
-| `essay` | Long-form essay | Zhihu(zh), 公众号(zh), dev.to(en), Substack(en) |
-| `tutorial`, `guide`, `howto` | Technical tutorial | Juejin(zh), dev.to(en) |
-| `release`, `launch` | Release announcement | dev.to(en), X(en+zh) |
-| `book`, `notes` | Learning notes | Yuque(zh), dev.to(en) |
-
-- `(zh)` = platform expects Chinese version; `(en)` = English version
-- Post with no convention tags → no sync targets, script prints info message
-- Reddit/HN are explicitly excluded (always hand-crafted per portfolio strategy)
-
-### 3. Platform Formatters
+### 4. Platform Formatters
 
 | Platform | Format | Special handling |
 |---|---|---|
@@ -63,14 +109,14 @@ python scripts/syndicate.py --all                              # all posts
 | Substack | Markdown | Same as dev.to |
 | X/Twitter | Plain text | `{title}\n\n{first-paragraph-summary}... 🔗 {canonical_url}` ≤ 280 chars |
 
-### 4. Language Matching
+### 5. Language Matching
 
 - Script receives one post path (e.g., `en/my-post.md`)
 - Automatically checks for sibling at `zh/my-post.md` (same filename, other language dir)
 - English platforms → English version; Chinese platforms → Chinese version
 - If only one language version exists, all platforms use that version
 
-### 5. Output Structure
+### 6. Output Structure
 
 ```
 _syndication/                      ← gitignored
@@ -83,7 +129,7 @@ _syndication/                      ← gitignored
     └── x-en.md
 ```
 
-### 6. Git Hook (`post-commit`)
+### 7. Git Hook (`post-commit`)
 
 - Detects new/modified files under `docs/blog/posts/`
 - Runs `python scripts/syndicate.py <path>` for each
