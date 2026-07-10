@@ -183,7 +183,7 @@ def format_post(post: Post, platform: Platform, canonical_base: str) -> str:
     elif platform.name == "x":
         return _format_x(post, canonical_url)
     else:
-        # Passthrough: zhihu, juejin, yuque
+        assert platform.name in PASSTHROUGH_PLATFORMS, f"Unknown platform: {platform.name}"
         return post.body
 
 
@@ -224,7 +224,7 @@ def _format_x(post: Post, canonical_url: str) -> str:
     if len(tweet) <= 280:
         return tweet
 
-    # Truncate at the last full sentence before the limit
+    # Truncate to fit within 280-char limit
     truncated = tweet[:277] + "..."
     return truncated
 
