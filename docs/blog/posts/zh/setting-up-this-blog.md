@@ -122,31 +122,52 @@ extra:
 **giscus** —— 免费无广告的评论系统，基于 GitHub Discussions。仓库开启 Discussions、安装
 [giscus App][3]，把 repo/category ID 填入 `mkdocs.yml` 即可。
 
-### 6. 主题细节
+### 6. 主题定制 —— Atom One Dark Pro
 
-```yaml
-theme:
-  name: material
-  features:
-    - navigation.tabs
-    - navigation.path
-    - toc.follow
-    - search.suggest
-    - search.highlight
-    - content.code.copy
-    - content.action.edit
-  palette:
-    - scheme: default
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+本站不使用 Material 默认的 indigo 配色。色调灵感来自 **Atom One Dark Pro**（VS Code
+经典主题），所有覆盖写在一个 CSS 文件里（`docs/stylesheets/extra.css`），通过
+`extra_css` 加载。
+
+**暗色模式（默认）：**
+
+| 变量 | 色值 | 用途 |
+|------|------|------|
+| 背景 | `#282c34` | 页面底色 |
+| 表面 | `#21252b` | 代码块、侧栏 |
+| 正文 | `#abb2bf` | 段落文字 |
+| 主色 | `#61afef` | 链接、顶栏 |
+| 强调 | `#56b6c2` | 悬停状态 |
+
+**亮色模式：**
+
+| 变量 | 色值 | 用途 |
+|------|------|------|
+| 背景 | `#fafafa` | 页面底色 |
+| 表面 | `#ffffff` | 卡片、侧栏 |
+| 正文 | `#383a42` | 段落文字 |
+| 主色 | `#4078f2` | 链接、顶栏 |
+| 强调 | `#0184bc` | 悬停状态 |
+
+核心 CSS：
+
+```css
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #282c34;
+  --md-primary-fg-color: #61afef;
+  --md-accent-fg-color:  #56b6c2;
+}
+
+[data-md-color-scheme="default"] {
+  --md-default-bg-color: #fafafa;
+  --md-primary-fg-color: #4078f2;
+  --md-accent-fg-color:  #0184bc;
+}
 ```
 
-Material 的 feature flag 文档很全 —— 需要什么开什么，其余的关掉。
+首页用了 **hero 布局** —— 大标题、一行描述、Material 的 `.md-button` CTA 按钮。博客卡片
+加了圆角、浅色背景和悬停上浮效果。页面切换有 `fadeIn` 淡入动画。
+
+暗色模式设为**默认** —— `mkdocs.yml` 中 `slate` 配置项排在最前面。
 
 ## 如何写文章
 

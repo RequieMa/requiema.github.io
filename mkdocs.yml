@@ -40,20 +40,20 @@ theme:
     - content.action.view
 
   palette:
+    # Dark mode (default)
+    - scheme: slate
+      primary: blue
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
     # Light mode
     - scheme: default
       primary: blue
       accent: cyan
       toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    # Dark mode
-    - scheme: slate
-      primary: blue
-      accent: cyan
-      toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: Switch to dark mode
 
 # ------------------------------------------------------------------
 # Extra CSS

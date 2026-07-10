@@ -129,31 +129,53 @@ extra:
 **giscus** — free, no-ads comment system powered by GitHub Discussions. Enable Discussions in the
 repo settings, install the [giscus app][3], and drop the repo/category IDs into `mkdocs.yml`.
 
-### 6. Theme Polish
+### 6. Theme Polish — Atom One Dark Pro
 
-```yaml
-theme:
-  name: material
-  features:
-    - navigation.tabs
-    - navigation.path
-    - toc.follow
-    - search.suggest
-    - search.highlight
-    - content.code.copy
-    - content.action.edit
-  palette:
-    - scheme: default
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+This site doesn't use the stock Material palette. Colors are inspired by **Atom One Dark Pro**,
+the popular VS Code theme. All overrides live in a single CSS file
+(`docs/stylesheets/extra.css`) loaded via `extra_css`.
+
+**Dark mode (default):**
+
+| Variable | Hex | Usage |
+|----------|-----|-------|
+| Background | `#282c34` | Page body |
+| Surface | `#21252b` | Code blocks, sidebar |
+| Text | `#abb2bf` | Body copy |
+| Primary | `#61afef` | Links, header |
+| Accent | `#56b6c2` | Hover states |
+
+**Light mode:**
+
+| Variable | Hex | Usage |
+|----------|-----|-------|
+| Background | `#fafafa` | Page body |
+| Surface | `#ffffff` | Cards, sidebar |
+| Text | `#383a42` | Body copy |
+| Primary | `#4078f2` | Links, header |
+| Accent | `#0184bc` | Hover states |
+
+Key CSS snippet:
+
+```css
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #282c34;
+  --md-primary-fg-color: #61afef;
+  --md-accent-fg-color:  #56b6c2;
+}
+
+[data-md-color-scheme="default"] {
+  --md-default-bg-color: #fafafa;
+  --md-primary-fg-color: #4078f2;
+  --md-accent-fg-color:  #0184bc;
+}
 ```
 
-Material's feature flags are well-documented — enable what you need, skip the rest.
+The home page gets a **hero layout** — large title, single-line subtitle, and Material's
+`.md-button` classes for CTA links. Blog post cards have rounded corners, subtle backgrounds,
+and a hover lift effect. A `fadeIn` animation smooths page transitions.
+
+Dark mode is set as the **default** — the `slate` palette entry is listed first in `mkdocs.yml`.
 
 ## Writing a Post
 
