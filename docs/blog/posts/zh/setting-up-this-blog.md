@@ -173,12 +173,6 @@ authors:
 
 放入 `docs/blog/posts/zh/` 或 `docs/blog/posts/en/`，commit，push —— CI 自动处理剩下的。
 
-## 故意没做的事情
-
-- **社交卡片** —— 插件能用，但 CairoSVG 在 WSL 上渲染慢。在 CI 环境取消注释 `social.cards: true` 即可。
-- **giscus 以外的评论系统** —— Disqus 有广告，utterances 需要单独的 bot。giscus 直接用仓库自己的 Discussions。
-- **邮件订阅** —— 暂时不需要。
-
 ## 总结
 
 | 维度 | 选择 |
