@@ -13,6 +13,20 @@ import yaml
 
 
 @dataclass
+class Platform:
+    """A syndication target platform with language preference."""
+    name: str       # 'devto', 'zhihu', 'juejin', etc.
+    language: str   # 'en' or 'zh'
+
+
+@dataclass
+class Route:
+    """A routing rule: tags → list of platforms."""
+    tags: list[str]
+    platforms: list[Platform]
+
+
+@dataclass
 class Post:
     """A parsed blog post."""
     title: str
@@ -68,3 +82,51 @@ def parse_post(filepath: Path) -> Post:
         slug=slug,
         path=filepath,
     )
+
+
+def load_routes(config_path: Path | None = None) -> list[Route]:
+    """Load routing configuration from syndicate.yml.
+
+    Args:
+        config_path: Path to syndicate.yml. If None, resolves relative to this script.
+
+    Returns:
+        List of Route objects in config order.
+    """
+    if config_path is None:
+        config_path = Path(__file__).resolve().parent / "syndicate.yml"
+
+    with open(config_path, encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    routes = []
+    for entry in data["routes"]:
+        platforms = [Platform(name=p["name"], language=p["language"])
+                     for p in entry["platforms"]]
+        routes.append(Route(tags=entry["tags"], platforms=platforms))
+    return routes
+
+
+def match_platforms(post: Post, routes: list[Route]) -> list[Platform]:
+    """Find all platforms this post should be syndicated to.
+
+    Iterates all route groups. Any group whose tags intersect the post's
+    tags contributes its platforms. Results are deduplicated by (name, language).
+
+    Args:
+        post: The parsed blog post.
+        routes: Route definitions from syndicate.yml.
+
+    Returns:
+        List of Platform objects (deduplicated, preserving first-match order).
+    """
+    matched: dict[tuple[str, str], Platform] = {}
+
+    for route in routes:
+        if any(tag in post.tags for tag in route.tags):
+            for p in route.platforms:
+                key = (p.name, p.language)
+                if key not in matched:
+                    matched[key] = p
+
+    return list(matched.values())
