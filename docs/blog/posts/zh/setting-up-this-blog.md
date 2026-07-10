@@ -125,8 +125,8 @@ extra:
 ### 6. 主题定制 —— Atom One Dark Pro
 
 本站不使用 Material 默认的 indigo 配色。色调灵感来自 **Atom One Dark Pro**（VS Code
-经典主题），所有覆盖写在一个 CSS 文件里（`docs/stylesheets/extra.css`），通过
-`extra_css` 加载。
+经典主题）—— 我一直很喜欢这个配色，Atom 停更的时候还挺难过的 😿。
+所有覆盖写在一个 CSS 文件里（`docs/stylesheets/extra.css`），通过 `extra_css` 加载。
 
 **暗色模式（默认）：**
 

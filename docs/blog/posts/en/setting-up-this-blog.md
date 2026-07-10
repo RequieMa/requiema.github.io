@@ -131,7 +131,9 @@ repo settings, install the [giscus app][3], and drop the repo/category IDs into 
 
 ### 6. Theme Polish — Atom One Dark Pro
 
-This site doesn't use the stock Material palette. Colors are inspired by **Atom One Dark Pro**,
+This site doesn't use the stock Material palette. 
+
+Colors are inspired by **Atom One Dark Pro** -- I always like this palette, and was really sad when Atom stops updating 😿,
 the popular VS Code theme. All overrides live in a single CSS file
 (`docs/stylesheets/extra.css`) loaded via `extra_css`.
 
