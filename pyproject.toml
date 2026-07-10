@@ -1,7 +1,7 @@
 [project]
 name = "requiema-github-io"
 version = "0.1.0"
-description = "Add your description here"
+description = "RequieMa's Personal Website"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
