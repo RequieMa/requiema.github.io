@@ -1,0 +1,41 @@
+# Blog Syndication Routing
+# Maps convention tags → target platforms with language preference.
+# Edit freely — the script reads from here, nothing is hardcoded.
+#
+# language: zh → expects Chinese version; en → English version
+# Reddit/HN are intentionally absent (always hand-crafted).
+
+routes:
+  - tags: [essay]
+    platforms:
+      - name: zhihu
+        language: zh
+      - name: gongzhonghao
+        language: zh
+      - name: devto
+        language: en
+      - name: substack
+        language: en
+
+  - tags: [tutorial, guide, howto]
+    platforms:
+      - name: juejin
+        language: zh
+      - name: devto
+        language: en
+
+  - tags: [release, launch]
+    platforms:
+      - name: devto
+        language: en
+      - name: x
+        language: en
+      - name: x
+        language: zh
+
+  - tags: [book, notes]
+    platforms:
+      - name: yuque
+        language: zh
+      - name: devto
+        language: en
