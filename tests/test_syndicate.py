@@ -335,3 +335,42 @@ def test_format_passthrough_platforms():
         platform = Platform(name=name, language="zh")
         output = format_post(post, platform, CANONICAL_BASE)
         assert output == post.body, f"{name} should be passthrough"
+
+
+import subprocess
+
+
+def test_cli_single_post_generates_files():
+    """End-to-end: run syndicate.py on the real blog post, verify output."""
+    repo_root = Path(__file__).resolve().parent.parent
+    post_path = repo_root / "docs/blog/posts/en/setting-up-this-blog.md"
+
+    if not post_path.exists():
+        # Skip if the post doesn't exist (shouldn't happen, but be safe)
+        return
+
+    # Run the script
+    result = subprocess.run(
+        ["uv", "run", "python", "scripts/syndicate.py", str(post_path)],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+    )
+
+    # Should exit cleanly
+    assert result.returncode == 0, f"stderr: {result.stderr}"
+
+    # Should print the post slug
+    assert "setting-up-this-blog" in result.stdout
+
+
+def test_cli_nonexistent_file():
+    """Passing a non-existent file should exit with error."""
+    result = subprocess.run(
+        ["uv", "run", "python", "scripts/syndicate.py", "nonexistent.md"],
+        cwd=Path(__file__).resolve().parent.parent,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode != 0

@@ -227,3 +227,129 @@ def _format_x(post: Post, canonical_url: str) -> str:
     # Truncate at the last full sentence before the limit
     truncated = tweet[:277] + "..."
     return truncated
+
+
+# ---------------------------------------------------------------------------
+# Output
+# ---------------------------------------------------------------------------
+
+OUTPUT_DIR = Path("_syndication")
+
+
+def write_output(slug: str, platform_name: str, language: str, content: str) -> Path:
+    """Write syndicated content to _syndication/{slug}/{platform}-{lang}.md.
+
+    Args:
+        slug: Post slug (filename stem).
+        platform_name: 'devto', 'zhihu', etc.
+        language: 'en' or 'zh'.
+        content: The formatted Markdown string.
+
+    Returns:
+        Path to the written file.
+    """
+    out_dir = OUTPUT_DIR / slug
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    filename = f"{platform_name}-{language}.md"
+    out_path = out_dir / filename
+    out_path.write_text(content, encoding="utf-8")
+    return out_path
+
+
+def find_all_posts() -> list[Path]:
+    """Find all unique blog posts (deduplicated by filename stem).
+
+    Prefers the en/ version when both en/ and zh/ exist.
+    """
+    posts_dir = Path("docs/blog/posts")
+    seen: set[str] = set()
+    posts: list[Path] = []
+
+    for md_file in sorted(posts_dir.rglob("*.md")):
+        if md_file.stem in seen:
+            continue
+        seen.add(md_file.stem)
+        posts.append(md_file)
+
+    return posts
+
+
+# ---------------------------------------------------------------------------
+# Main logic
+# ---------------------------------------------------------------------------
+
+CANONICAL_BASE = "https://requiema.github.io/blog"
+
+
+def process_post(filepath: Path, routes: list[Route]) -> None:
+    """Process a single blog post: match platforms, format, write output.
+
+    Args:
+        filepath: Path to the post Markdown file.
+        routes: Route definitions from syndicate.yml.
+    """
+    post = parse_post(filepath)
+    platforms = match_platforms(post, routes)
+
+    print(f"📄 {post.slug}")
+
+    if not platforms:
+        print("   💡 无同步目标。请在 frontmatter 的 tags 中添加约定标签: "
+              "essay / tutorial / guide / howto / release / launch / book / notes")
+        return
+
+    for p in platforms:
+        # Find the right language version
+        target_post = find_post_for_language(post, p.language)
+        if target_post is None:
+            print(f"   ⚠️  没有 {p.language} 语言版本，使用 {post.language} 版本代替")
+            target_post = post
+
+        content = format_post(target_post, p, CANONICAL_BASE)
+        out_path = write_output(target_post.slug, p.name, p.language, content)
+        print(f"   ✅ {out_path}")
+
+
+def main() -> None:
+    """CLI entry point."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Blog syndication helper — generate platform-formatted copies of posts."
+    )
+    parser.add_argument(
+        "post_path", nargs="?",
+        help="Path to a blog post (e.g., docs/blog/posts/en/my-post.md)"
+    )
+    parser.add_argument(
+        "--all", action="store_true",
+        help="Process all blog posts"
+    )
+
+    args = parser.parse_args()
+
+    if not args.post_path and not args.all:
+        parser.print_help()
+        return
+
+    routes = load_routes()
+
+    if args.all:
+        posts = find_all_posts()
+        if not posts:
+            print("📭 没有找到任何博客文章。")
+            return
+        for post_path in posts:
+            process_post(post_path, routes)
+            print()
+    else:
+        filepath = Path(args.post_path)
+        if not filepath.exists():
+            print(f"❌ 文件不存在: {filepath}")
+            raise SystemExit(1)
+        process_post(filepath, routes)
+
+
+if __name__ == "__main__":
+    main()
