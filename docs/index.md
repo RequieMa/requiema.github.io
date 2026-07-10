@@ -4,9 +4,10 @@ hide:
   - toc
 ---
 
-# Welcome to RequieMa
+# RequieMa
 
-Hi, I'm Bill Ma. This is my personal corner of the internet.
+## :fontawesome-solid-flag: English
+[Blog →](blog/category/en/)
 
-- **[Blog](blog/index.md)** — thoughts on code, tech, and life (English / 中文)
-- **[About](about.md)** — who I am and what I do
+## :fontawesome-solid-flag: 中文
+[博客 →](blog/category/zh/)

@@ -2,7 +2,8 @@
 date:
   created: 2026-07-10
 categories:
-  - Meta
+  - en
+  - meta
 tags:
   - english
   - meta

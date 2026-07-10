@@ -157,6 +157,15 @@ nav:
 # Site Analytics (Google Analytics 4)
 # ------------------------------------------------------------------
 extra:
+  # Language switcher in header
+  alternate:
+    - name: English
+      link: /en/
+      lang: en
+    - name: 中文
+      link: /zh/
+      lang: zh
+
   analytics:
     provider: google
     property: G-RH1WYLCXK1

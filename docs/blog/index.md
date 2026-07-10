@@ -1,5 +1,7 @@
 # Blog
 
-Welcome to my blog. Here I write about coding, life, and everything in between.
+## :fontawesome-solid-flag: English
+[Browse all English posts →](category/en/)
 
-Posts in English and Chinese — browse by language or topic below.
+## :fontawesome-solid-flag: 中文
+[浏览所有中文文章 →](category/zh/)
