@@ -6,6 +6,6 @@ hide:
 
 # English
 
-- **[Blog →](blog/category/en/)** — all English posts
-- **[Tags →](tags/)** — browse by topic
-- **[About →](about/)** — who I am
+[Blog →](/blog/category/en/){ .md-button .md-button--primary }
+[Tags →](/tags/){ .md-button }
+[About →](../about.md){ .md-button }

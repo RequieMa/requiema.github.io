@@ -6,6 +6,11 @@ site_name: RequieMa
 site_description: Personal blog about coding, complexity science, and more
 site_url: https://requiema.github.io
 
+# Don't warn about absolute links to plugin-generated pages (blog categories, tags)
+validation:
+  links:
+    absolute_links: ignore
+
 # ------------------------------------------------------------------
 # Repository (git integration — edit button, source link)
 # ------------------------------------------------------------------
@@ -33,21 +38,28 @@ theme:
     - content.code.copy
     - content.action.edit
     - content.action.view
+
   palette:
     # Light mode
     - scheme: default
-      primary: indigo
-      accent: indigo
+      primary: blue
+      accent: cyan
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     # Dark mode
     - scheme: slate
-      primary: indigo
-      accent: indigo
+      primary: blue
+      accent: cyan
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+
+# ------------------------------------------------------------------
+# Extra CSS
+# ------------------------------------------------------------------
+extra_css:
+  - stylesheets/extra.css
 
 # ------------------------------------------------------------------
 # Plugins

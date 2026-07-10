@@ -52,7 +52,9 @@ uv add mkdocs-material pillow cairosvg \
   mkdocs-rss-plugin
 ```
 
-`uv` manages dependencies with a lockfile (`uv.lock`) so builds are reproducible. After that,
+`uv` manages dependencies with a lockfile (`uv.lock`) so builds are reproducible. 
+
+After that,
 `mkdocs.yml` and `docs/index.md` are the only files you touch. Replace `index.md` with your
 landing page.
 
@@ -178,14 +180,6 @@ Content goes here.
 
 Drop it in `docs/blog/posts/en/` or `docs/blog/posts/zh/`, commit, push — the CI pipeline handles
 the rest.
-
-## What is Missing (On Purpose)
-
-- **Social cards** — the plugin works, but CairoSVG rendering is slow on WSL. Uncomment
-  `social.cards: true` in CI environments.
-- **No comment system other than giscus** — Disqus has ads, utterances requires a separate bot.
-  giscus uses the repo's own Discussions.
-- **No email newsletter** — not needed at launch.
 
 ## Summary
 

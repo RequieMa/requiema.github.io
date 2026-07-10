@@ -6,8 +6,11 @@ hide:
 
 # RequieMa
 
-## :fontawesome-solid-flag: English
-[Blog →](blog/category/en/)
+Personal corner of the internet — writing about code, complexity science,
+and the craft of building things.
 
-## :fontawesome-solid-flag: 中文
-[博客 →](blog/category/zh/)
+---
+
+[English Blog →](/blog/category/en/){ .md-button .md-button--primary }
+[中文博客 →](/blog/category/zh/){ .md-button }
+[About →](about.md){ .md-button }

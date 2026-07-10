@@ -1,0 +1,231 @@
+/* ============================================================
+   RequieMa Blog · Custom Theme — Atom One Dark Pro inspired
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   CSS Variables — Light Mode (default)
+   ---------------------------------------------------------- */
+[data-md-color-scheme="default"] {
+  --md-default-bg-color: #fafafa;
+  --md-default-bg-color--light: #ffffff;
+  --md-default-bg-color--lighter: #f5f5f5;
+  --md-default-fg-color: #383a42;
+  --md-default-fg-color--light: #696c77;
+  --md-default-fg-color--lighter: #a0a1a7;
+
+  --md-primary-fg-color: #4078f2;
+  --md-primary-fg-color--light: #618efa;
+  --md-primary-fg-color--dark: #3060c8;
+  --md-primary-bg-color: #ffffff;
+
+  --md-accent-fg-color: #0184bc;
+  --md-accent-fg-color--transparent: #0184bc1a;
+
+  --md-code-bg-color: #f0f0f0;
+  --md-code-fg-color: #383a42;
+
+  --md-typeset-color: #383a42;
+  --md-typeset-a-color: #4078f2;
+
+  --md-footer-bg-color: #f0f0f0;
+  --md-footer-fg-color: #696c77;
+}
+
+/* ----------------------------------------------------------
+   CSS Variables — Dark Mode (slate)
+   ---------------------------------------------------------- */
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #282c34;
+  --md-default-bg-color--light: #2c313a;
+  --md-default-bg-color--lighter: #333842;
+  --md-default-fg-color: #abb2bf;
+  --md-default-fg-color--light: #828997;
+  --md-default-fg-color--lighter: #5c6370;
+
+  --md-primary-fg-color: #61afef;
+  --md-primary-fg-color--light: #82c4f4;
+  --md-primary-fg-color--dark: #4a90d4;
+  --md-primary-bg-color: #21252b;
+
+  --md-accent-fg-color: #56b6c2;
+  --md-accent-fg-color--transparent: #56b6c21a;
+
+  --md-code-bg-color: #21252b;
+  --md-code-fg-color: #abb2bf;
+
+  --md-typeset-color: #abb2bf;
+  --md-typeset-a-color: #61afef;
+
+  --md-footer-bg-color: #21252b;
+  --md-footer-fg-color: #5c6370;
+
+  /* Sidebar / Nav */
+  --md-nav-bg-color: #21252b;
+}
+
+/* ----------------------------------------------------------
+   Global
+   ---------------------------------------------------------- */
+
+/* Smooth page transitions */
+.md-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Rounded corners for cards, code blocks, admonitions */
+.md-typeset .admonition,
+.md-typeset details,
+.md-typeset pre > code,
+.md-typeset table:not([class]),
+.md-typeset .md-button {
+  border-radius: 0.4rem;
+}
+
+/* Code block subtle border */
+.md-typeset pre > code {
+  border: 1px solid var(--md-default-fg-color--lightest, transparent);
+}
+
+/* ----------------------------------------------------------
+   Home Page — Hero Section
+   ---------------------------------------------------------- */
+
+/* Hero container (wraps content when nav/toc hidden) */
+.md-main__inner {
+  margin-top: 1.5rem;
+}
+
+/* Hero title */
+.md-typeset h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Hero subtitle — the paragraph after h1 */
+.md-typeset h1 + p {
+  font-size: 1.15rem;
+  color: var(--md-default-fg-color--light);
+  max-width: 36rem;
+  line-height: 1.7;
+}
+
+/* Hero button row */
+.md-typeset h1 + p + hr + p {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+/* Hero buttons */
+.md-typeset .md-button {
+  border-radius: 0.4rem;
+  font-weight: 500;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.md-typeset .md-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--md-accent-fg-color--transparent);
+}
+
+/* Primary button */
+.md-typeset .md-button--primary {
+  background-color: var(--md-primary-fg-color);
+  border-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+}
+
+/* ----------------------------------------------------------
+   Blog Cards
+   ---------------------------------------------------------- */
+
+/* Blog post excerpt cards */
+.md-post--excerpt {
+  background-color: var(--md-default-bg-color--light);
+  border: 1px solid var(--md-default-fg-color--lightest, rgba(128,128,128,0.15));
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.md-post--excerpt:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+/* Blog post title in cards */
+.md-post__title {
+  font-weight: 600;
+}
+
+/* Blog post meta (date, author) */
+.md-post__meta {
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light);
+}
+
+/* ----------------------------------------------------------
+   Navigation
+   ---------------------------------------------------------- */
+
+/* Nav link hover */
+.md-nav__link:hover {
+  color: var(--md-accent-fg-color);
+}
+
+/* Active nav item */
+.md-nav__item--active > .md-nav__link {
+  color: var(--md-primary-fg-color);
+  font-weight: 600;
+}
+
+/* Header tabs */
+.md-tabs__link--active {
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------
+   Tables
+   ---------------------------------------------------------- */
+
+.md-typeset table:not([class]) th {
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+}
+
+/* ----------------------------------------------------------
+   Search
+   ---------------------------------------------------------- */
+
+.md-search__input {
+  border-radius: 0.4rem;
+}
+
+/* ----------------------------------------------------------
+   Scrollbar (dark mode)
+   ---------------------------------------------------------- */
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar-track {
+  background: #21252b;
+}
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar-thumb {
+  background: #4b5263;
+  border-radius: 4px;
+}
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar-thumb:hover {
+  background: #5c6370;
+}
