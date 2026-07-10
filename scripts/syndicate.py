@@ -154,3 +154,76 @@ def find_post_for_language(post: Post, target_lang: str) -> Post | None:
         return parse_post(other_path)
 
     return None
+
+
+# ---------------------------------------------------------------------------
+# Platform formatters
+# ---------------------------------------------------------------------------
+
+PASSTHROUGH_PLATFORMS = {"zhihu", "juejin", "yuque"}
+
+
+def format_post(post: Post, platform: Platform, canonical_base: str) -> str:
+    """Format a post for a specific platform.
+
+    Args:
+        post: The parsed post (in the correct language for the platform).
+        platform: The target platform with language preference.
+        canonical_base: Base URL for canonical links (e.g. https://requiema.github.io/blog).
+
+    Returns:
+        Formatted Markdown string for the platform.
+    """
+    canonical_url = f"{canonical_base}/{post.slug}/"
+
+    if platform.name in ("devto", "substack"):
+        return _format_with_canonical(post, canonical_url)
+    elif platform.name == "gongzhonghao":
+        return _format_gongzhonghao(post)
+    elif platform.name == "x":
+        return _format_x(post, canonical_url)
+    else:
+        # Passthrough: zhihu, juejin, yuque
+        return post.body
+
+
+def _format_with_canonical(post: Post, canonical_url: str) -> str:
+    """Format for dev.to / Substack: add canonical_url frontmatter."""
+    lines = [
+        "---",
+        f"title: \"{post.title}\"",
+        f"canonical_url: {canonical_url}",
+        "---",
+        "",
+        post.body,
+    ]
+    return "\n".join(lines)
+
+
+def _format_gongzhonghao(post: Post) -> str:
+    """Format for 公众号: prepend rich-text conversion reminder."""
+    lines = [
+        "<!-- 公众号只支持富文本，请用 https://markdown.com.cn 转成富文本后粘贴 -->",
+        "",
+        post.body,
+    ]
+    return "\n".join(lines)
+
+
+def _format_x(post: Post, canonical_url: str) -> str:
+    """Format for X/Twitter: title + first paragraph + link, ≤ 280 chars."""
+    # Extract first non-heading paragraph as summary
+    paragraphs = [
+        p for p in post.body.split("\n\n")
+        if p.strip() and not p.strip().startswith("#")
+    ]
+    summary = paragraphs[0].strip() if paragraphs else ""
+
+    tweet = f"{post.title}\n\n{summary}\n\n🔗 {canonical_url}"
+
+    if len(tweet) <= 280:
+        return tweet
+
+    # Truncate at the last full sentence before the limit
+    truncated = tweet[:277] + "..."
+    return truncated

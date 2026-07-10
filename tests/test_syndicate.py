@@ -239,3 +239,99 @@ def test_find_post_for_language_no_sibling():
 
     result = find_post_for_language(post, "zh")
     assert result is None
+
+
+from syndicate import format_post
+
+
+CANONICAL_BASE = "https://requiema.github.io/blog"
+
+
+def test_format_devto_adds_canonical_url():
+    """dev.to output includes canonical_url in frontmatter."""
+    post = Post(
+        title="My Test Post",
+        tags=["essay"], categories=["en"],
+        body="# My Test Post\n\nSome content.",
+        language="en", slug="my-test-post", path=Path("dummy"),
+    )
+    platform = Platform(name="devto", language="en")
+
+    output = format_post(post, platform, CANONICAL_BASE)
+
+    assert "canonical_url: https://requiema.github.io/blog/my-test-post/" in output
+    assert "Some content." in output
+
+
+def test_format_substack_same_as_devto():
+    """Substack uses the same format as dev.to."""
+    post = Post(
+        title="Test", tags=["essay"], categories=["en"],
+        body="# Test\n\nBody.",
+        language="en", slug="test", path=Path("dummy"),
+    )
+    devto_out = format_post(post, Platform(name="devto", language="en"), CANONICAL_BASE)
+    substack_out = format_post(post, Platform(name="substack", language="en"), CANONICAL_BASE)
+
+    assert devto_out == substack_out
+
+
+def test_format_gongzhonghao_adds_warning():
+    """公众号 output includes a reminder about rich-text conversion."""
+    post = Post(
+        title="Test", tags=["essay"], categories=["zh"],
+        body="# 测试\n\n正文内容。",
+        language="zh", slug="test", path=Path("dummy"),
+    )
+    platform = Platform(name="gongzhonghao", language="zh")
+
+    output = format_post(post, platform, CANONICAL_BASE)
+
+    assert "markdown.com.cn" in output
+    assert "正文内容" in output
+
+
+def test_format_x_short_tweet():
+    """X/Twitter: title + first paragraph + link."""
+    post = Post(
+        title="My Post",
+        tags=["release"], categories=["en"],
+        body="# My Post\n\nA quick announcement.",
+        language="en", slug="my-post", path=Path("dummy"),
+    )
+    platform = Platform(name="x", language="en")
+
+    output = format_post(post, platform, CANONICAL_BASE)
+
+    assert "My Post" in output
+    assert "A quick announcement" in output
+    assert "🔗 https://requiema.github.io/blog/my-post/" in output
+
+
+def test_format_x_truncates_long_tweet():
+    """X/Twitter: truncates to ≤ 280 characters."""
+    post = Post(
+        title="A Very Long Post Title",
+        tags=["release"], categories=["en"],
+        body="# A Very Long Post Title\n\n" + ("Very long sentence. " * 30),
+        language="en", slug="long-post", path=Path("dummy"),
+    )
+    platform = Platform(name="x", language="en")
+
+    output = format_post(post, platform, CANONICAL_BASE)
+
+    assert len(output) <= 280
+
+
+def test_format_passthrough_platforms():
+    """Zhihu, Juejin, Yuque get the raw body as-is."""
+    post = Post(
+        title="Test", tags=["tutorial"], categories=["zh"],
+        body="# 测试\n\n正文。",
+        language="zh", slug="test", path=Path("dummy"),
+    )
+
+    for name in ("zhihu", "juejin", "yuque"):
+        platform = Platform(name=name, language="zh")
+        output = format_post(post, platform, CANONICAL_BASE)
+        assert output == post.body, f"{name} should be passthrough"
