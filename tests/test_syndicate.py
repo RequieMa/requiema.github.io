@@ -3,6 +3,8 @@ from pathlib import Path
 import tempfile
 import textwrap
 
+import pytest
+
 # Allow importing scripts/syndicate.py
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -346,7 +348,7 @@ def test_cli_single_post_generates_files():
     post_path = repo_root / "docs/blog/posts/en/setting-up-this-blog.md"
 
     if not post_path.exists():
-        # Skip if the post doesn't exist (shouldn't happen, but be safe)
+        pytest.skip("Post does not exist")
         return
 
     # Run the script
